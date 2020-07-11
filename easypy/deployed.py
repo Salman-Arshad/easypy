@@ -1,0 +1,3 @@
+DEBUG = True
+DEPLOYED = True
+ENVIRONMENT = 'prod'

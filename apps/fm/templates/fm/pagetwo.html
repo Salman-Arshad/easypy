@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second Page</title>
+    <link rel="stylesheet" href="./assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/all.min.css">
+    <link rel="stylesheet" href="./assets/css/jquery-ui.min.css">
+    <link href="https://canvasjs.com/assets/css/jquery-ui.1.11.2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
+<style>
+.dataTables_wrapper{
+    margin-top: 2rem;
+}
+
+</style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 p-0">
+                <nav class="navbar bg-light navbar-fixed-top" role="navigation">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <h5 class="monitoring">Monitoring System</h5>
+                    </div>
+                        <!-- Top Menu Items -->
+                    <ul class=" nav navbar-right top-nav">
+                        <li>
+                            <button type="button" class="btn upperdiv border-round border"><b>Switch to Table</b></button>
+                        </li>
+                    </ul>
+                    
+                </nav>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2 p-0">
+                <nav class="navbar bg-light">
+                    <a class="btn w-100 heading" data-toggle="collapse" href="#box1" role="button" aria-expanded="false" aria-controls="box1">Absolute Return Measures</a>
+                        <div class="collapse multi-collapse" id="box1">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Kurtosis</p>
+                                <p>Alpha</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                    <a class="btn w-100 heading" data-toggle="collapse" href="#box2" role="button" aria-expanded="false" aria-controls="box2">Absolute Risk-Adj,Measures</a>
+                        <div class="collapse multi-collapse" id="box2">
+                            <div class="card list">
+                                <p>Share Ration</p>
+                                <p>Kalmar Ration</p>
+                                <p>Shorting Ration</p>
+                                <p class="mb-3">Omega Ration</p>
+                                <a class="btn w-100 heading" data-toggle="collapse" href="#subbox2" role="button" aria-expanded="false" aria-controls="subbox2">Tall Risk Measures</a>
+                                <div class="collapse multi-collapse" id="subbox2">
+                                    <label class="pl-3">Annual</label>
+                                    <p class="mt-3 pl-3">Daily</p>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box3" role="button" aria-expanded="false" aria-controls="box3">Drawdown</a>
+                        <div class="collapse multi-collapse" id="box3">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Kurtosis</p>
+                                <p>Alpha</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box4" role="button" aria-expanded="false" aria-controls="box4">Tall Risk Measures</a>
+                        <div class="collapse multi-collapse" id="box4">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Kurtosis</p>
+                                <p>Alpha</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box5" role="button" aria-expanded="false" aria-controls="box5">Relative Return Measures</a>
+                        <div class="collapse multi-collapse" id="box5">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Alpha</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box6" role="button" aria-expanded="false" aria-controls="box6">Relative Risk Measures</a>
+                        <div class="collapse multi-collapse" id="box6">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Alpha</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box7" role="button" aria-expanded="false" aria-controls="box7">Tall Risk Measures</a>
+                        <div class="collapse multi-collapse" id="box7">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box8" role="button" aria-expanded="false" aria-controls="box8">Fractal Measure</a>
+                        <div class="collapse multi-collapse" id="box8">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box9" role="button" aria-expanded="false" aria-controls="box9">Absolute Risk Measures</a>
+                        <div class="collapse multi-collapse" id="box9">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box10" role="button" aria-expanded="false" aria-controls="box10">Relative Risk-Adj,Measures</a>
+                        <div class="collapse multi-collapse" id="box10">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box11" role="button" aria-expanded="false" aria-controls="box11">Trade Statistics</a>
+                        <div class="collapse multi-collapse" id="box11">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                        <a class="btn w-100 heading" data-toggle="collapse" href="#box12" role="button" aria-expanded="false" aria-controls="box12">Unamed column for now</a>
+                        <div class="collapse multi-collapse" id="box12">
+                            <div class="card list">
+                                <p>Skewness</p>
+                                <p>Beta</p>
+                            </div>
+                        </div>
+                  
+                </nav>
+            </div>
+            <div class="col-10">
+                <!-- <table>
+                    <tr>
+                        <td>YTD</td>
+                        <td>1Y</td>
+                        <td>3Y (ann.)</td>
+                        <td>5Y (ann.)</td>
+                        <td>10Y (ann.)</td>
+                        <td>All-time (ann.)</td>
+                        <td>Best Year</td>
+                        <td>Worst Year</td>
+                        <td>Expected Yearly %</td>
+                        <td>Annual_return</td>
+                        <td>Annual_volatility</td>
+                        <td class="text-nowrap">CAGR% (Compund Annual Growth Rate)</td>
+                        <td>avg_yearly_closed_out_drawdown</td>
+                        <td>max_yearly_closed_out_drawdown</td>
+                    </tr>
+                    <tr>
+                        <td>48.83%</td>
+                        <td>35.28%</td>
+                        <td>19.24%</td>
+                        <td>21.12%</td>
+                        <td>24.28%</td>
+                        <td>24.28%</td>
+                        <td>105.3%</td>
+                        <td>-30.37%</td>
+                        <td>22.6%</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>-8.28</td>
+                        <td>-33.21</td>
+                    </tr>
+                </table> -->
+                <button class="btn btn-outline-primary" onclick="add_row()">Add Row</button>
+
+                <table id="example" class="display" cellspacing="0" width="100%" >
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Max Holding Period</th>
+                            <th>Min Holding Period</th>
+                            <th>Average Holding Period</th>
+                            <th>Absolute Drawdown</th>
+                            <th>Sharpe</th>
+                            <th>Avg Return</th>
+                            <th>Value at Risk</th>
+                            <th>Max Drawdown</th>
+                            <th>Expected Return</th>
+                            <th>Expected Volatility</th>
+                            <th>Wallet Balance</th>
+                            <th>Balance Logs</th>
+                            <th>Wallet Summary</th>
+                            <th>Wallet Balance Drawdown Absolute</th>
+                            <th>Initial Wallet Deposit </th>
+                            <th>Margin Utilization Rate</th>
+                            <th>Free Margin (latest balance)</th>
+                            <th>Current Margin Utilization Rate</th>
+                            <th>Current Account Balance</th>
+                            <th>Balance Drawdown</th>
+                        </tr>
+                    </thead>
+             
+                     <!-- <tfoot>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Max Holding Period</th>
+                            <th>Min Holding Period</th>
+                            <th>Average Holding Period</th>
+                            <th>Absolute Drawdown</th>
+                            <th>Sharpe</th>
+                            <th>Avg Return</th>
+                            <th>Value at Risk</th>
+                            <th>Max Drawdown</th>
+                            <th>Expected Return</th>
+                            <th>Expected Volatility</th>
+                            <th>Wallet Balance</th>
+                            <th>Balance Logs</th>
+                            <th>Wallet Summary</th>
+                            <th>Wallet Balance Drawdown Absolute</th>
+                            <th>Initial Wallet Deposit </th>
+                            <th>Margin Utilization Rate</th>
+                            <th>Free Margin (latest balance)</th>
+                            <th>Current Margin Utilization Rate</th>
+                            <th>Current Account Balance</th>
+                            <th>Balance Drawdown</th>
+                        </tr>
+                    </tfoot>  -->
+             
+                    <tbody id="table_body">
+                       
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+ 
+ 
+
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script src="./assets/js/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script>
+
+function format ( d ) {
+    // `d` is the original data object for the row
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>'+
+            '<td>Time</td>'+
+            '<td>Status</td>'+
+            '<td>Type</td>'+
+            '<td>Size</td>'+
+            '<td>Filled</td>'+
+            '<td>Avg Price</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>0</td>'+
+            '<td>None</td>'+
+            '<td>None</td>'+
+            '<td>0</td>'+
+            '<td>0</td>'+
+            '<td>0</td>'+
+        '</tr>'+
+    '</table>';
+}
+        var count = 0;
+        var pid =0 ;        
+    var table = $('#example').DataTable({
+        select:"single",
+    "columns": [
+        {
+            "className": 'details-control',
+            "orderable": false,
+            "data": null,
+            "defaultContent": '',
+            "render": function () {
+                return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+            },
+            width:"15px"
+        }
+
+
+    ],
+  		'createdRow': function( row, data, dataIndex ) {
+      		$(row).attr('id', pid + "-row");
+  		},
+  		'columnDefs': [
+          {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   1
+        },
+
+          {
+        		'targets': 18,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Free Margin (latest balance)"); 
+        		}
+     		},
+             {
+        		'targets': 19,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Current Margin Utilization Rate"); 
+        		}
+     		},
+             {
+        		'targets': 20,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Current Account Balance"); 
+        		}
+     		},
+             {
+        		'targets': 21,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Balance Drawdown"); 
+        		}
+     		}
+  		],
+          select: {
+            style:    'multi',
+            selector: 'td:nth-child(2)'  
+                  },
+        order: [[ 2, 'asc' ]]
+    });
+  
+
+// <input type="text" id="1309-Free Margin (Latst balance)" value="0">
+// <input type="text" id="1309-Current Margin Itiidfaldfsldfja" value="0">
+// <input type="text" id="1409-Free Margin (Latst balance)" value="0">
+
+// {"key": "Free Margin (Latest)", "value": "0"}
+
+// var chatSocket = new WebSocket("ws://64.227.25.121/ws/execution/9284/");
+// chatSocket.onmessage = function(e) {
+//         var data = JSON.parse(e.data)
+//         document.getElementById('9284-'+data['key']).innerText = data["value"]
+//         console.log(data)
+//     };
+
+
+$(document).ready(function(){
+    var settings = {
+  "url": "http://64.227.25.121/api/script/stop/",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Authorization": "Token 0a709abcb69b6ce18d98abaedd7007171e48b2a2",
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({"pid":"all"}),
+};
+
+$.ajax(settings).done(function (response) {
+//   console.log(response);
+});
+})
+
+function add_row(){
+ 
+
+    var settings = {
+  "url": "http://64.227.25.121/api/script/run/",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Authorization": "Token 0a709abcb69b6ce18d98abaedd7007171e48b2a2",
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({"id":"kM1NMD5YmMm_jlr4PVYGrlOX","secret":"iQIJ7BsNexwX70Q7WzGKdGRjVl3Z6nZFLiA3azA1Rkbs2DRS", "symbol":"XBTUSD", "signal":"signals_option_17", "timeframe":"1m"}),
+};
+
+
+
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+   pid = response.pid;
+    table.row.add( ['','','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'] )
+    table.draw( false );
+
+var chatSocket = new WebSocket("ws://64.227.25.121/ws/execution/");
+chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data)
+        document.getElementById(data['pid']+'-'+data['key']).innerText = data["value"]
+        console.log(data)
+    };
+    chatSocket.onclose = function(e) {
+        console.log('Chat socket closed unexpectedly');
+        console.log(e);
+    };
+
+    chatSocket.onerror = function(err) {
+        console.error('there was an error: ', err.message);
+    };
+  
+});
+}
+$('#example tbody').on('click', 'td.details-control', function () {
+    var tr = $(this).closest('tr');
+    var tdi = tr.find("i.fa");
+    var row = table.row(tr);
+
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+        tdi.first().removeClass('fa-minus-square');
+        tdi.first().addClass('fa-plus-square');
+    }
+    else {
+        // Open this row
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+        tdi.first().removeClass('fa-plus-square');
+        tdi.first().addClass('fa-minus-square');
+    }
+});
+
+table.on("user-select", function (e, dt, type, cell, originalEvent) {
+    if ($(cell.node()).hasClass("details-control")) {
+        e.preventDefault();
+    }
+});
+
+    </script>
+</body>
+
+
+
+<!-- ajax(
+    adlfajdklfjadklfjadklfja
+).success(
+    <row><row>
+        var chatSocket = new WebSocket("ws://64.227.25.121/ws/execution/9284/");
+chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data)
+        document.getElementById('9284-'+data['key']).innerText = data["value"]
+        console.log(data)
+    };
+ -->
+
+
+
+</html>

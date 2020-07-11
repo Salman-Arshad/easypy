@@ -1,0 +1,8 @@
+scripts/
+*.log
+*.pyc
+nohup.out
+apps/*/migrations/*.py
+!apps/*/migrations/__init__.py
+/env/
+env/

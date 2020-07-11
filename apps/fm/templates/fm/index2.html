@@ -1,0 +1,721 @@
+{% load static custom_templatetags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <!-- Our Custom CSS -->
+    <link href="https://fonts.googleapis.com/css?family=Inconsolata&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'fm/css/custom.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'fm/css/dialog.css' %}">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+
+    <script src="https://pagecdn.io/lib/ace/1.4.8/ace.js" crossorigin="anonymous" integrity="sha256-+svOVB1WmhKhTy7N21gWvtyXn91qF0r52P2hIArRRug=" ></script>
+    <script src="https://pagecdn.io/lib/ace/1.4.8/snippets/python.js" crossorigin="anonymous"  ></script>
+    <title>Title</title>
+    <style>
+    #sidebar{
+        height: 100% !important;
+    }
+    </style>
+</head>
+<body>
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+    <!-- jQuery - min version (with AJAX) -->
+    <script src="{% static 'fm/js/jquery.min.js' %}" ></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+    <div class="wrapper">
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle file-manager" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    File
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <button type="button" onclick="setNewFileType('rename');" id="ctrl-btn-rename" class="dropdown-item" data-toggle="modal" data-target="#createFileModal" disabled>
+                            <i class="fas fa-pencil-alt"></i>
+                            Rename
+                        </button>
+                        <button type="button" id="ctrl-btn-upload" class="dropdown-item" data-toggle="modal" data-target="#uploadModal" disabled>
+                            <i class="fas fa-upload"></i>
+                            Upload
+                        </button>
+                        <button type="button" onclick="rmFile()" id="ctrl-btn-delete" class="dropdown-item" disabled>
+                            <i class="fas fa-trash"></i>
+                            Delete
+                        </button>
+                        <button type="button" onclick="setNewFileType('dir');" id="ctrl-btn-new-dir" class="dropdown-item" data-toggle="modal" data-target="#createFileModal" disabled>
+                            <i class="fas fa-folder-open"></i>
+                            New Directory
+                        </button>
+                        <button type="button" onclick="setNewFileType('file');" id="ctrl-btn-new-file" class="dropdown-item" data-toggle="modal" data-target="#createFileModal" disabled>
+                            <i class="fas fa-file"></i>
+                            New File
+                        </button>
+                        <button type="button" onclick="submitSave()" id="ctrl-btn-save" class="dropdown-item" disabled>
+                            <i class="fas fa-save"></i>
+                            Save File
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {{ tree|as_li }}
+        </nav>
+        <!-- Page Content -->
+        <div id="content" style="width: 100%;">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-info">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <h3 id="file-name" style="display: none;"></h3>
+                </div>
+            </nav>
+            <div class="container-fluid  mt-5">
+                <form action="javascript:void(0);" onsubmit="table_fill()">
+                <div class="form-group">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">Momentum</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                      <option value="{{cs}}">{{cs}}</option>
+                       {% endfor %}
+                    </select>
+                  </div>
+                  <div class="form-group mt-3"> 
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">SMA</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">ATR</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">BB</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">CCI</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">MACD</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">RSI</label>
+                    <select class="form-control " id="exampleFormControlSelect1">
+                        {% for cs in csv %}
+                        <option value="{{cs}}">{{cs}}</option>
+                         {% endfor %}
+  
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">Signal</label>
+                    <select class="form-control " id="signal">
+                      <option value="signals_option_0">signals_option_0</option>
+                      <option value="signals_option_1">signals_option_1</option>
+                      <option value="signals_option_2">signals_option_2</option>
+                      <option value="signals_option_3">signals_option_3</option>
+                      <option value="signals_option_4">signals_option_4</option>
+                      <option value="signals_option_5">signals_option_5</option>
+                      <option value="signals_option_6">signals_option_6</option>
+                      <option value="signals_option_7">signals_option_7</option>
+                      <option value="signals_option_8">signals_option_8</option>
+                      <option value="signals_option_9">signals_option_9</option>
+                      <option value="signals_option_10">signals_option_10</option>
+                      <option value="signals_option_11">signals_option_11</option>
+                      <option value="signals_option_12">signals_option_12</option>
+                      <option value="signals_option_13">signals_option_13</option>
+                      <option value="signals_option_14">signals_option_14</option>
+                      <option value="signals_option_15">signals_option_15</option>
+                      <option value="signals_option_16">signals_option_16</option>
+                      <option value="signals_option_17">signals_option_17</option>
+                      <option value="signals_option_18">signals_option_18</option>
+                      <option value="signals_option_19">signals_option_19</option>
+                      <option value="signals_option_20">signals_option_20</option>
+                      <option value="signals_option_21">signals_option_21</option>
+                      <option value="signals_option_22">signals_option_22</option>
+                      <option value="signals_option_23">signals_option_23</option>
+                      <option value="signals_option_24">signals_option_24</option>
+                      <option value="signals_option_25">signals_option_25</option>
+                      <option value="signals_option_26">signals_option_26</option>
+                      <option value="signals_option_27">signals_option_27</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">Symbol</label>
+                    <select class="form-control "  id="symbol">
+                        <option value="XBTUSD">XBTUSD</option>
+                        <option value="ETHUSD">ETHUSD</option>
+                    </select>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="exampleFormControlSelect1" class="font-weight-bold">Timeframe</label>
+                    <select class="form-control "  id="timeframe">
+                        <option value="1m">1 m</option>
+                        <option value="5m">5 m</option>
+                        <option value="1h">1 h</option>
+                        <option value="1h">1 day</option>
+                    </select>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label for="exampleFormControlInput1">Quantity size:</label>
+                    <input type="number" class="form-control" id="exampleFormControlInput1" placeholder="Enter Quantity" required>
+                  </div>
+                  <div class="mt-3 text-center">
+                  <button class="btn btn-outline-primary btn-lg">
+                  Submit
+                  </button>
+                </div>
+                </form>
+
+                <div class="container-fluid mt-5" id="table_show">
+                    <div class="row">
+                        <div class="col-12 p-0">
+                            <nav class="navbar bg-light navbar-fixed-top" role="navigation">
+                                <!-- Brand and toggle get grouped for better mobile display -->
+                                <div class="navbar-header">
+                                    <h5 class="monitoring">Monitoring System</h5>
+                                </div>
+                                    <!-- Top Menu Items -->
+                                <ul class=" nav navbar-right top-nav">
+                                    <li>
+                                        <button type="button" class="btn upperdiv border-round border"><b>Switch to Table</b></button>
+                                    </li>
+                                </ul>
+                                
+                            </nav>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2 p-0">
+                            <nav class="navbar bg-light">
+                                <a class="btn w-100 heading" data-toggle="collapse" href="#box1" role="button" aria-expanded="false" aria-controls="box1">Absolute Return Measures</a>
+                                    <div class="collapse multi-collapse" id="box1">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Kurtosis</p>
+                                            <p>Alpha</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                <a class="btn w-100 heading" data-toggle="collapse" href="#box2" role="button" aria-expanded="false" aria-controls="box2">Absolute Risk-Adj,Measures</a>
+                                    <div class="collapse multi-collapse" id="box2">
+                                        <div class="card list">
+                                            <p>Share Ration</p>
+                                            <p>Kalmar Ration</p>
+                                            <p>Shorting Ration</p>
+                                            <p class="mb-3">Omega Ration</p>
+                                            <a class="btn w-100 heading" data-toggle="collapse" href="#subbox2" role="button" aria-expanded="false" aria-controls="subbox2">Tall Risk Measures</a>
+                                            <div class="collapse multi-collapse" id="subbox2">
+                                                <label class="pl-3">Annual</label>
+                                                <p class="mt-3 pl-3">Daily</p>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box3" role="button" aria-expanded="false" aria-controls="box3">Drawdown</a>
+                                    <div class="collapse multi-collapse" id="box3">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Kurtosis</p>
+                                            <p>Alpha</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box4" role="button" aria-expanded="false" aria-controls="box4">Tall Risk Measures</a>
+                                    <div class="collapse multi-collapse" id="box4">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Kurtosis</p>
+                                            <p>Alpha</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box5" role="button" aria-expanded="false" aria-controls="box5">Relative Return Measures</a>
+                                    <div class="collapse multi-collapse" id="box5">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Alpha</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box6" role="button" aria-expanded="false" aria-controls="box6">Relative Risk Measures</a>
+                                    <div class="collapse multi-collapse" id="box6">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Alpha</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box7" role="button" aria-expanded="false" aria-controls="box7">Tall Risk Measures</a>
+                                    <div class="collapse multi-collapse" id="box7">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box8" role="button" aria-expanded="false" aria-controls="box8">Fractal Measure</a>
+                                    <div class="collapse multi-collapse" id="box8">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box9" role="button" aria-expanded="false" aria-controls="box9">Absolute Risk Measures</a>
+                                    <div class="collapse multi-collapse" id="box9">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box10" role="button" aria-expanded="false" aria-controls="box10">Relative Risk-Adj,Measures</a>
+                                    <div class="collapse multi-collapse" id="box10">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box11" role="button" aria-expanded="false" aria-controls="box11">Trade Statistics</a>
+                                    <div class="collapse multi-collapse" id="box11">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                                    <a class="btn w-100 heading" data-toggle="collapse" href="#box12" role="button" aria-expanded="false" aria-controls="box12">Unamed column for now</a>
+                                    <div class="collapse multi-collapse" id="box12">
+                                        <div class="card list">
+                                            <p>Skewness</p>
+                                            <p>Beta</p>
+                                        </div>
+                                    </div>
+                              
+                            </nav>
+                        </div>
+                        <div class="col-10">
+                            <!-- <table>
+                                <tr>
+                                    <td>YTD</td>
+                                    <td>1Y</td>
+                                    <td>3Y (ann.)</td>
+                                    <td>5Y (ann.)</td>
+                                    <td>10Y (ann.)</td>
+                                    <td>All-time (ann.)</td>
+                                    <td>Best Year</td>
+                                    <td>Worst Year</td>
+                                    <td>Expected Yearly %</td>
+                                    <td>Annual_return</td>
+                                    <td>Annual_volatility</td>
+                                    <td class="text-nowrap">CAGR% (Compund Annual Growth Rate)</td>
+                                    <td>avg_yearly_closed_out_drawdown</td>
+                                    <td>max_yearly_closed_out_drawdown</td>
+                                </tr>
+                                <tr>
+                                    <td>48.83%</td>
+                                    <td>35.28%</td>
+                                    <td>19.24%</td>
+                                    <td>21.12%</td>
+                                    <td>24.28%</td>
+                                    <td>24.28%</td>
+                                    <td>105.3%</td>
+                                    <td>-30.37%</td>
+                                    <td>22.6%</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td>-8.28</td>
+                                    <td>-33.21</td>
+                                </tr>
+                            </table> -->
+                            <button class="btn btn-outline-primary" onclick="add_row()">Add Row</button>
+            
+                            <table id="example" class="display" cellspacing="0" width="100%" >
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Max Holding Period</th>
+                                        <th>Min Holding Period</th>
+                                        <th>Average Holding Period</th>
+                                        <th>Absolute Drawdown</th>
+                                        <th>Sharpe</th>
+                                        <th>Avg Return</th>
+                                        <th>Value at Risk</th>
+                                        <th>Max Drawdown</th>
+                                        <th>Expected Return</th>
+                                        <th>Expected Volatility</th>
+                                        <th>Wallet Balance</th>
+                                        <th>Balance Logs</th>
+                                        <th>Wallet Summary</th>
+                                        <th>Wallet Balance Drawdown Absolute</th>
+                                        <th>Initial Wallet Deposit </th>
+                                        <th>Margin Utilization Rate</th>
+                                        <th>Free Margin (latest balance)</th>
+                                        <th>Current Margin Utilization Rate</th>
+                                        <th>Current Account Balance</th>
+                                        <th>Balance Drawdown</th>
+                                    </tr>
+                                </thead>
+                         
+                                 <!-- <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Max Holding Period</th>
+                                        <th>Min Holding Period</th>
+                                        <th>Average Holding Period</th>
+                                        <th>Absolute Drawdown</th>
+                                        <th>Sharpe</th>
+                                        <th>Avg Return</th>
+                                        <th>Value at Risk</th>
+                                        <th>Max Drawdown</th>
+                                        <th>Expected Return</th>
+                                        <th>Expected Volatility</th>
+                                        <th>Wallet Balance</th>
+                                        <th>Balance Logs</th>
+                                        <th>Wallet Summary</th>
+                                        <th>Wallet Balance Drawdown Absolute</th>
+                                        <th>Initial Wallet Deposit </th>
+                                        <th>Margin Utilization Rate</th>
+                                        <th>Free Margin (latest balance)</th>
+                                        <th>Current Margin Utilization Rate</th>
+                                        <th>Current Account Balance</th>
+                                        <th>Balance Drawdown</th>
+                                    </tr>
+                                </tfoot>  -->
+                         
+                                <tbody id="table_body">
+                                   
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+             
+             
+            
+                </div>
+                <div class="row p-2" style="height: 10%; min-height: 45px;display: none;">
+                    <div class="col overflow-auto">
+                        <input type="hidden" name="file" value="">
+                    </div>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group mr-2" role="group" aria-label="First group">
+                            <button type="button" onclick="wipe()" id="ctrl-btn-clear" class="btn" title="Clean Input" data-toggle="tooltip">
+                                <i class="fas fa-eraser"></i>
+                            </button>
+                            <button type="button" onclick="submitRun()" id="ctrl-btn-run" class="btn" title="Run Code or Ctrl+Intro" data-toggle="tooltip">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-2" style="height: 40%;display: none;">
+                    <div id="editor" style="height: 100%; width:100%;display: none;"></div>
+                </div>
+                <div class="row p-2" style="height: 40%;display: none;">
+                    <textarea disabled class="stdout" id="stdout"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="uploadModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <form action="/upload/" method="POST" class="form p-5" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="upload-location" name="upload_location" value="">
+                    <div class="custom-file">
+                        <input class="custom-file-input" type="file" accept=".py, .csv" name="files" id="patient-files" data-multiple-caption="{count} files selected" multiple />
+                        <label class="custom-file-label" for="patient-files">Browse or Drop Files</label>
+                        <div id="files-detail"></div>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary" type="submit">Upload</button>
+                    </div>
+                </form>
+                <script>
+                // Add the following code if you want the name of the file appear on select
+                $(".custom-file-input").on("change", function() {
+                    var files = $(this).prop('files');
+                    var names = $.map(files, function(val) { return val.name; });
+                    $.each(names, function(i, name) {
+                        $('#files-detail').append(
+                            '<p class="m-0">'+name+'</p>'
+                        );
+                    });
+                    $(this).siblings(".custom-file-label").addClass("selected").html('Files: ' + names.length);
+                });
+                </script>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="createFileModal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <form class="form p-5" method="POST" onsubmit="createFile(); return false">
+                    {% csrf_token %}
+                    <input type="hidden" id="parent-abspath" name="parent-abspath" value="">
+                    <input type="hidden" id="new-file-type" name="new-file-type" value="">
+                    <input type="text" id="new-file-name" name="new-file-name" class="form-control" placeholder="Name...">
+                    <hr>
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary" id="new-file-submit" type="submit">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="dialogoverlay">
+        <div class="loading">Loading&#8230;</div>
+    </div>
+
+    <script src="{% static 'fm/js/easypy.js' %}" ></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>
+    <script>
+document.getElementById("table_show").style.display = "none"
+function format ( d ) {
+    // `d` is the original data object for the row
+    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+        '<tr>'+
+            '<td>Time</td>'+
+            '<td>Status</td>'+
+            '<td>Type</td>'+
+            '<td>Size</td>'+
+            '<td>Filled</td>'+
+            '<td>Avg Price</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>0</td>'+
+            '<td>None</td>'+
+            '<td>None</td>'+
+            '<td>0</td>'+
+            '<td>0</td>'+
+            '<td>0</td>'+
+        '</tr>'+
+    '</table>';
+}
+        var count = 0;
+        var pid =0 ;        
+    var table = $('#example').DataTable({
+        select:"single",
+    "columns": [
+        {
+            "className": 'details-control',
+            "orderable": false,
+            "data": null,
+            "defaultContent": '',
+            "render": function () {
+                return '<i class="fa fa-plus-square" aria-hidden="true"></i>';
+            },
+            width:"15px"
+        }
+
+
+    ],
+  		'createdRow': function( row, data, dataIndex ) {
+      		$(row).attr('id', pid + "-row");
+  		},
+  		'columnDefs': [
+          {
+            orderable: false,
+            className: 'select-checkbox',
+            targets:   1
+        },
+
+          {
+        		'targets': 18,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Free Margin (latest balance)"); 
+        		}
+     		},
+             {
+        		'targets': 19,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Current Margin Utilization Rate"); 
+        		}
+     		},
+             {
+        		'targets': 20,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Current Account Balance"); 
+        		}
+     		},
+             {
+        		'targets': 21,
+        		'createdCell':  function (td, cellData, rowData, row, col) {
+           			$(td).attr('id', pid + "-Balance Drawdown"); 
+        		}
+     		}
+  		],
+          select: {
+            style:    'multi',
+            selector: 'td:nth-child(2)'  
+                  },
+        order: [[ 2, 'asc' ]]
+    });
+  
+
+// <input type="text" id="1309-Free Margin (Latst balance)" value="0">
+// <input type="text" id="1309-Current Margin Itiidfaldfsldfja" value="0">
+// <input type="text" id="1409-Free Margin (Latst balance)" value="0">
+
+// {"key": "Free Margin (Latest)", "value": "0"}
+
+// var chatSocket = new WebSocket("ws://64.227.25.121/ws/execution/9284/");
+// chatSocket.onmessage = function(e) {
+//         var data = JSON.parse(e.data)
+//         document.getElementById('9284-'+data['key']).innerText = data["value"]
+//         console.log(data)
+//     };
+
+
+$(document).ready(function(){
+    var settings = {
+  "url": "http://64.227.25.121/api/script/stop/",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Authorization": "Token 0a709abcb69b6ce18d98abaedd7007171e48b2a2",
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({"pid":"all"}),
+};
+
+$.ajax(settings).done(function (response) {
+//   console.log(response);
+});
+})
+
+function table_fill(){
+    document.getElementById("table_show").style.display = "block"
+}
+function add_row(){
+ 
+
+    var settings = {
+  "url": "http://64.227.25.121/api/script/run/",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Authorization": "Token 0a709abcb69b6ce18d98abaedd7007171e48b2a2",
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({"id":"kM1NMD5YmMm_jlr4PVYGrlOX","secret":"iQIJ7BsNexwX70Q7WzGKdGRjVl3Z6nZFLiA3azA1Rkbs2DRS", "symbol":document.getElementById("symbol").value, "signal":document.getElementById("signal").value, "timeframe":document.getElementById("timeframe").value}),
+};
+
+
+
+
+$.ajax(settings).done(function (response) {
+  console.log(response);
+   pid = response.pid;
+    table.row.add( ['','','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0'] )
+    table.draw( false );
+
+var chatSocket = new WebSocket("ws://64.227.25.121/ws/execution/");
+chatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data)
+        document.getElementById(data['pid']+'-'+data['key']).innerText = data["value"]
+        console.log(data)
+    };
+    chatSocket.onclose = function(e) {
+        console.log('Chat socket closed unexpectedly');
+        console.log(e);
+    };
+
+    chatSocket.onerror = function(err) {
+        console.error('there was an error: ', err.message);
+    };
+  
+});
+}
+$('#example tbody').on('click', 'td.details-control', function () {
+    var tr = $(this).closest('tr');
+    var tdi = tr.find("i.fa");
+    var row = table.row(tr);
+
+    if (row.child.isShown()) {
+        // This row is already open - close it
+        row.child.hide();
+        tr.removeClass('shown');
+        tdi.first().removeClass('fa-minus-square');
+        tdi.first().addClass('fa-plus-square');
+    }
+    else {
+        // Open this row
+        row.child(format(row.data())).show();
+        tr.addClass('shown');
+        tdi.first().removeClass('fa-plus-square');
+        tdi.first().addClass('fa-minus-square');
+    }
+});
+
+table.on("user-select", function (e, dt, type, cell, originalEvent) {
+    if ($(cell.node()).hasClass("details-control")) {
+        e.preventDefault();
+    }
+});
+
+    </script>
+</body>
+</html>
